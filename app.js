@@ -1,7 +1,7 @@
 // Configuration de l'application
 const CONFIG = {
     // Heure d'alerte médicament (format HH:MM)
-    MEDICATION_TIME: '14:45',
+    MEDICATION_TIME: '19:30',
     
     // Durée de rotation des photos (en millisecondes)
     // 1 heure = 1 * 60 * 60 * 1000
