@@ -25,6 +25,9 @@ class ColetteApp {
         this.currentPhotoIndex = 0;
         this.medicationCheckInterval = null;
         this.photoRotationTimeout = null;
+        this.audioContext = null;
+        this.alertSoundTimeout = null;
+        this.alertSoundInterval = null;
         
         this.init();
     }
@@ -185,7 +188,143 @@ class ColetteApp {
     
     showMedicationAlert() {
         console.log('💊 Alerte médicament !');
+        
+        // Jouer un son d'alerte en boucle
+        this.startAlertSound();
+        
         this.switchView('medication');
+    }
+    
+    startAlertSound() {
+        // Arrêter le son précédent s'il y en a un
+        this.stopAlertSound();
+        
+        // Essayer d'abord les sons système Android/navigateur
+        this.playSystemSound();
+        
+        // Puis démarrer une boucle avec des sons système
+        this.alertSoundInterval = setInterval(() => {
+            if (this.currentView === 'medication') {
+                this.playSystemSound();
+            } else {
+                clearInterval(this.alertSoundInterval);
+            }
+        }, 3000); // Répéter toutes les 3 secondes
+    }
+    
+    playSystemSound() {
+        // Essayer plusieurs méthodes pour jouer un son système
+        
+        // 1. Son via une notification silencieuse (Android)
+        if ('Notification' in window && Notification.permission === 'granted') {
+            try {
+                const notification = new Notification('Médicaments', {
+                    body: 'Il est temps !',
+                    icon: 'icons/icon-192.svg',
+                    silent: false, // Son de notification
+                    tag: 'medication-alert'
+                });
+                
+                // Fermer la notification rapidement
+                setTimeout(() => notification.close(), 100);
+                return;
+            } catch (error) {
+                console.log('Notification sound failed:', error);
+            }
+        }
+        
+        // 2. Son via élément audio avec data URL (son de bip simple)
+        try {
+            const audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUcBSuJ0/LNeiURKH7K7+OVOQ0PaLzs3Z1MFAZBnN7tx2EcCCeA0fPTgSAOIXfH8N+TQgkTXrTp75sBEQxBnN7tx2EcCCeA0fPTgSAOIXfH8N+TQgkTXrTp75sBEQxBnN7tx2EcCCeA0fPTgSAOIXfH8N+TQgkTXrTp75sBEQxBnN7tx2EcCCeA0fPTgSAOIXfH8N+TQgkTXrTp75sBEQxBnN7tx2EcCCeA0fPTgSAOIXfH8N+TQgkTXrTp75sBEQxBnN7tx2EcCCeA0fPTgSAOIXfH8N+TQgkT');
+            audio.play().then(() => {
+                console.log('System beep played');
+            }).catch(error => {
+                console.log('Audio beep failed:', error);
+                // 3. Fallback vers la mélodie synthétique
+                this.playMelodyLoop();
+            });
+        } catch (error) {
+            console.log('Audio creation failed:', error);
+            // 4. Dernier fallback
+            this.playMelodyLoop();
+        }
+    }
+    
+    playMelodyLoop() {
+        if (!this.audioContext) return;
+        
+        // Mélodie inspirée de "Joyeux Anniversaire" - universellement positive !
+        const melody = [
+            { freq: 262, duration: 0.3 },  // Do
+            { freq: 262, duration: 0.2 },  // Do
+            { freq: 294, duration: 0.5 },  // Ré
+            { freq: 262, duration: 0.5 },  // Do
+            { freq: 349, duration: 0.5 },  // Fa
+            { freq: 330, duration: 0.8 },  // Mi (longue)
+            { freq: 0, duration: 0.2 },    // Silence
+            { freq: 262, duration: 0.3 },  // Do
+            { freq: 262, duration: 0.2 },  // Do
+            { freq: 294, duration: 0.5 },  // Ré
+            { freq: 262, duration: 0.5 },  // Do
+            { freq: 392, duration: 0.5 },  // Sol
+            { freq: 349, duration: 0.8 },  // Fa (longue)
+        ];
+        
+        let currentTime = this.audioContext.currentTime;
+        
+        // Jouer chaque note
+        melody.forEach((note) => {
+            this.playNote(note.freq, note.duration, currentTime);
+            currentTime += note.duration + 0.05; // Petit silence entre les notes
+        });
+        
+        // Programmer la répétition
+        const totalDuration = melody.reduce((sum, note) => sum + note.duration + 0.05, 0);
+        this.alertSoundTimeout = setTimeout(() => {
+            if (this.currentView === 'medication') { // Continuer seulement si encore en mode alerte
+                this.playMelodyLoop();
+            }
+        }, totalDuration * 1000);
+    }
+    
+    playNote(frequency, duration, startTime) {
+        if (!this.audioContext) return;
+        
+        // Ne pas jouer les silences
+        if (frequency === 0) return;
+        
+        const oscillator = this.audioContext.createOscillator();
+        const gainNode = this.audioContext.createGain();
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(this.audioContext.destination);
+        
+        oscillator.frequency.setValueAtTime(frequency, startTime);
+        oscillator.type = 'square'; // Son plus distinctif et joyeux
+        
+        // Envelope pour un son plus festif
+        gainNode.gain.setValueAtTime(0, startTime);
+        gainNode.gain.linearRampToValueAtTime(0.25, startTime + 0.01);
+        gainNode.gain.linearRampToValueAtTime(0.25, startTime + duration - 0.1);
+        gainNode.gain.linearRampToValueAtTime(0, startTime + duration);
+        
+        oscillator.start(startTime);
+        oscillator.stop(startTime + duration);
+    }
+    
+    stopAlertSound() {
+        if (this.alertSoundTimeout) {
+            clearTimeout(this.alertSoundTimeout);
+            this.alertSoundTimeout = null;
+        }
+        if (this.alertSoundInterval) {
+            clearInterval(this.alertSoundInterval);
+            this.alertSoundInterval = null;
+        }
+        if (this.audioContext) {
+            this.audioContext.close();
+            this.audioContext = null;
+        }
     }
     
     confirmMedication() {
@@ -193,6 +332,9 @@ class ColetteApp {
         localStorage.setItem('lastMedicationTaken', today);
         
         console.log('✅ Médicament confirmé pour aujourd\'hui');
+        
+        // Arrêter le son d'alerte
+        this.stopAlertSound();
         
         // Animation du bouton
         const confirmButton = document.getElementById('confirmButton');
@@ -268,7 +410,7 @@ class ColetteApp {
             this.confirmMedication();
         });
         
-        // Double tap pour forcer l'alerte (pour test)
+        // Double tap pour forcer l'alerte (utile si elle prend avant l'heure)
         let tapCount = 0;
         document.addEventListener('click', () => {
             tapCount++;
