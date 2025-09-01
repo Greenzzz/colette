@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#2c3e50">
+    <title>Colette - Aide Médicaments</title>
+    
+    <!-- PWA Configuration -->
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" href="icons/icon-192.png">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- État normal : diaporama + date -->
+    <div id="normalView" class="view active">
+        <!-- Diaporama en arrière-plan -->
+        <div id="slideshow" class="slideshow">
+            <div class="slide active" id="slide1"></div>
+            <div class="slide" id="slide2"></div>
+        </div>
+        
+        <!-- Overlay avec date et heure -->
+        <div class="overlay">
+            <div class="date-display">
+                <div class="day-name" id="dayName">Dimanche</div>
+                <div class="date-number" id="dateNumber">1</div>
+                <div class="month-year" id="monthYear">Septembre 2025</div>
+                <div class="time-display" id="timeDisplay">14:30</div>
+                <div class="medication-status" id="medicationStatus">
+                    <div class="status-icon">💊</div>
+                    <div class="status-text">All good ! 😊</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- État alerte médicament -->
+    <div id="medicationView" class="view medication-alert">
+        <div class="medication-container">
+            <div class="medication-context">
+                <div class="current-day" id="currentDay">Mardi</div>
+                <div class="current-time" id="currentTime">19:30</div>
+            </div>
+            
+            <div class="medication-message">
+                <h1 class="medication-call">Prends tes médocs ! 💊</h1>
+            </div>
+            
+            <button id="confirmButton" class="confirm-button">
+                ✓ C'est fait !
+            </button>
+        </div>
+    </div>
+    
+    <!-- Scripts -->
+    <script src="app.js"></script>
+</body>
+</html>

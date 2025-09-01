@@ -1,0 +1,24 @@
+<svg width="192" height="192" viewBox="0 0 192 192" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Fond de l'icône -->
+  <rect width="192" height="192" rx="24" fill="#2c3e50"/>
+  
+  <!-- Pilulier/boîte à médicaments -->
+  <rect x="40" y="52" width="112" height="88" rx="12" fill="white" fill-opacity="0.95"/>
+  
+  <!-- Compartiments du pilulier -->
+  <line x1="96" y1="52" x2="96" y2="140" stroke="#2c3e50" stroke-width="2"/>
+  <line x1="40" y1="96" x2="152" y2="96" stroke="#2c3e50" stroke-width="2"/>
+  
+  <!-- Médicaments dans les compartiments -->
+  <circle cx="68" cy="74" r="8" fill="#27ae60"/>
+  <circle cx="124" cy="74" r="8" fill="#e74c3c"/>
+  <circle cx="68" cy="118" r="8" fill="#3498db"/>
+  <circle cx="124" cy="118" r="8" fill="#f39c12"/>
+  
+  <!-- Croix médicale -->
+  <circle cx="96" cy="160" r="16" fill="white" fill-opacity="0.9"/>
+  <path d="M96 152V168M88 160H104" stroke="#2c3e50" stroke-width="3" stroke-linecap="round"/>
+  
+  <!-- Texte -->
+  <text x="96" y="180" font-family="Arial" font-size="12" font-weight="bold" fill="white" text-anchor="middle">Colette</text>
+</svg>

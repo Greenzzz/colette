@@ -1,0 +1,436 @@
+/* Reset et base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    overflow: hidden;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #2c3e50;
+    color: white;
+    touch-action: manipulation;
+    user-select: none;
+}
+
+/* Vues principales */
+.view {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.5s ease-in-out;
+}
+
+.view.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* État normal - Diaporama + Date */
+#normalView {
+    display: flex;
+    flex-direction: column;
+}
+
+.slideshow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0;
+    transition: opacity 2s ease-in-out;
+}
+
+.slide.active {
+    opacity: 1;
+}
+
+.slide:not(.active) {
+    opacity: 0;
+}
+
+/* Gradient par défaut seulement si pas d'image de fond */
+.slide:empty:not([style*="background-image"]) {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.overlay {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.date-display {
+    text-align: center;
+    background: rgba(255, 255, 255, 0.85);
+    color: #2c3e50;
+    padding: 40px 60px;
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(5px);
+}
+
+.day-name {
+    font-size: 5.5rem;
+    font-weight: 300;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    font-family: 'Courier New', monospace;
+}
+
+.date-number {
+    font-size: 12rem;
+    font-weight: bold;
+    line-height: 0.9;
+    margin: 30px 0;
+    color: #e74c3c;
+    font-family: 'Courier New', monospace;
+    text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.month-year {
+    font-size: 4rem;
+    font-weight: 300;
+    color: #7f8c8d;
+    text-transform: uppercase;
+    margin-bottom: 35px;
+    letter-spacing: 2px;
+    font-family: 'Courier New', monospace;
+}
+
+.time-display {
+    font-size: 7rem;
+    font-weight: bold;
+    color: #2c3e50;
+    font-family: 'Courier New', monospace;
+    letter-spacing: 8px;
+    text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.2);
+    margin-bottom: 30px;
+}
+
+.medication-status {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.medication-status.visible {
+    display: flex;
+}
+
+.status-icon {
+    font-size: 2.5rem;
+}
+
+.status-text {
+    font-size: 2.2rem;
+    color: #27ae60;
+    font-weight: bold;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* État alerte médicament */
+.medication-alert {
+    background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+}
+
+.medication-container {
+    text-align: center;
+    background: rgba(255, 255, 255, 0.95);
+    color: #2c3e50;
+    padding: 60px 80px;
+    border-radius: 30px;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
+    max-width: 800px;
+    width: 100%;
+}
+
+.medication-context {
+    margin-bottom: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.current-day {
+    font-size: 4.5rem;
+    color: #7f8c8d;
+    font-weight: 300;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    font-family: 'Courier New', monospace;
+}
+
+.current-time {
+    font-size: 8rem;
+    color: #2c3e50;
+    font-weight: bold;
+    font-family: 'Courier New', monospace;
+    letter-spacing: 6px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.medication-message {
+    margin-bottom: 50px;
+}
+
+.medication-call {
+    font-size: 5rem;
+    color: #27ae60;
+    font-weight: bold;
+    margin: 0;
+}
+
+.confirm-button {
+    font-size: 3.5rem;
+    background: linear-gradient(145deg, #2ecc71, #27ae60);
+    color: white;
+    border: 4px solid #229954;
+    border-radius: 30px;
+    padding: 40px 80px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    font-weight: bold;
+    min-width: 400px;
+    min-height: 150px;
+    touch-action: manipulation;
+    box-shadow: 
+        0 12px 30px rgba(39, 174, 96, 0.4),
+        0 6px 15px rgba(0, 0, 0, 0.15),
+        inset 0 2px 0 rgba(255, 255, 255, 0.3),
+        inset 0 -2px 0 rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
+    transform: translateY(0);
+}
+
+.confirm-button:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60%;
+    background: linear-gradient(180deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 100%);
+    border-radius: 26px 26px 0 0;
+}
+
+.confirm-button:hover {
+    background: linear-gradient(145deg, #32d477, #2ecc71);
+    transform: translateY(-2px);
+    box-shadow: 
+        0 16px 40px rgba(39, 174, 96, 0.5),
+        0 8px 20px rgba(0, 0, 0, 0.2),
+        inset 0 2px 0 rgba(255, 255, 255, 0.4),
+        inset 0 -2px 0 rgba(0, 0, 0, 0.1);
+    border-color: #1e8e3e;
+}
+
+.confirm-button:active {
+    transform: translateY(3px);
+    background: linear-gradient(145deg, #27ae60, #229954);
+    box-shadow: 
+        0 4px 15px rgba(39, 174, 96, 0.3),
+        0 2px 8px rgba(0, 0, 0, 0.1),
+        inset 0 2px 6px rgba(0, 0, 0, 0.15),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.1);
+    border-color: #196140;
+}
+
+/* Animation confettis */
+.confetti-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+}
+
+.confetti {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: #f39c12;
+    animation: confetti-fall 3s linear forwards;
+}
+
+@keyframes confetti-fall {
+    0% {
+        transform: translateY(-100vh) rotate(0deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(100vh) rotate(720deg);
+        opacity: 0;
+    }
+}
+
+/* Animation du bouton success plus simple */
+.confirm-button.animate-success {
+    animation: buttonSuccess 0.6s ease-in-out;
+}
+
+@keyframes buttonSuccess {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+/* Adaptation pour différentes orientations */
+@media (orientation: landscape) {
+    .date-display {
+        padding: 30px 50px;
+    }
+    
+    .day-name {
+        font-size: 4.5rem;
+        letter-spacing: 2px;
+    }
+    
+    .date-number {
+        font-size: 9rem;
+    }
+    
+    .month-year {
+        font-size: 3rem;
+        margin-bottom: 25px;
+        letter-spacing: 1px;
+    }
+    
+    .time-display {
+        font-size: 5.5rem;
+        letter-spacing: 6px;
+        margin-bottom: 25px;
+    }
+    
+    .status-text {
+        font-size: 1.8rem;
+    }
+    
+    .current-day {
+        font-size: 3.5rem;
+        letter-spacing: 3px;
+    }
+    
+    .current-time {
+        font-size: 6rem;
+        letter-spacing: 4px;
+    }
+    
+    .medication-call {
+        font-size: 4rem;
+    }
+    
+    .today-date {
+        font-size: 2.8rem;
+    }
+    
+    .medication-message p {
+        font-size: 2.5rem;
+    }
+    
+    .confirm-button {
+        font-size: 2.8rem;
+        padding: 30px 60px;
+        min-height: 120px;
+        min-width: 320px;
+    }
+}
+
+/* Adaptation pour petites tablettes */
+@media (max-width: 768px) {
+    .date-display {
+        padding: 25px 40px;
+    }
+    
+    .day-name {
+        font-size: 3.5rem;
+        letter-spacing: 2px;
+    }
+    
+    .date-number {
+        font-size: 7rem;
+    }
+    
+    .month-year {
+        font-size: 2.5rem;
+        margin-bottom: 20px;
+        letter-spacing: 1px;
+    }
+    
+    .time-display {
+        font-size: 4rem;
+        letter-spacing: 4px;
+        margin-bottom: 20px;
+    }
+    
+    .status-text {
+        font-size: 1.6rem;
+    }
+    
+    .medication-container {
+        padding: 40px 50px;
+    }
+    
+    .medication-title {
+        font-size: 3rem;
+    }
+    
+    .current-day {
+        font-size: 3rem;
+        letter-spacing: 2px;
+    }
+    
+    .current-time {
+        font-size: 5rem;
+        letter-spacing: 3px;
+    }
+    
+    .medication-call {
+        font-size: 3.5rem;
+    }
+    
+    .medication-message p {
+        font-size: 2.2rem;
+    }
+    
+    .confirm-button {
+        font-size: 2.5rem;
+        padding: 25px 50px;
+        min-height: 110px;
+        min-width: 280px;
+    }
+}
