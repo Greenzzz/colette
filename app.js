@@ -410,6 +410,11 @@ class ColetteApp {
             this.confirmMedication();
         });
         
+        // Bouton refresh discret
+        document.getElementById('refreshButton').addEventListener('click', () => {
+            window.location.reload();
+        });
+        
         // Double tap pour forcer l'alerte (utile si elle prend avant l'heure)
         let tapCount = 0;
         document.addEventListener('click', () => {

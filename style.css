@@ -159,6 +159,34 @@ html, body {
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
+.refresh-button {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: rgba(0, 0, 0, 0.1);
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    font-size: 1.5rem;
+    color: rgba(44, 62, 80, 0.6);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(5px);
+    touch-action: manipulation;
+}
+
+.refresh-button:hover {
+    background: rgba(0, 0, 0, 0.2);
+    color: rgba(44, 62, 80, 0.9);
+    transform: rotate(180deg);
+}
+
+.refresh-button:active {
+    transform: rotate(180deg) scale(0.9);
+    background: rgba(0, 0, 0, 0.3);
+}
+
 /* État alerte médicament */
 .medication-alert {
     background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
