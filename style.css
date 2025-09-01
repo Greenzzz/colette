@@ -91,6 +91,22 @@ html, body {
     border-radius: 20px;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
     backdrop-filter: blur(5px);
+    animation: gentle-pulse 4s ease-in-out infinite;
+}
+
+@keyframes gentle-pulse {
+    0% { 
+        opacity: 0.85;
+        transform: scale(1);
+    }
+    50% { 
+        opacity: 0.95;
+        transform: scale(1.01);
+    }
+    100% { 
+        opacity: 0.85;
+        transform: scale(1);
+    }
 }
 
 .day-name {
@@ -189,11 +205,44 @@ html, body {
 
 /* État alerte médicament */
 .medication-alert {
-    background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     padding: 40px;
+    background: linear-gradient(135deg, #e74c3c 0%, #f39c12 14%, #f1c40f 28%, #2ecc71 42%, #3498db 56%, #9b59b6 70%, #e91e63 84%, #ff5722 100%);
+    background-size: 600% 600%;
+    animation: alert-background 8s ease-in-out infinite;
+}
+
+@keyframes alert-background {
+    0% {
+        background-position: 0% 50%;
+    }
+    12.5% {
+        background-position: 25% 75%;
+    }
+    25% {
+        background-position: 50% 100%;
+    }
+    37.5% {
+        background-position: 75% 75%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    62.5% {
+        background-position: 75% 25%;
+    }
+    75% {
+        background-position: 50% 0%;
+    }
+    87.5% {
+        background-position: 25% 25%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
 }
 
 .medication-container {
@@ -240,9 +289,28 @@ html, body {
 
 .medication-call {
     font-size: 5rem;
-    color: #27ae60;
+    color: #2c3e50;
     font-weight: bold;
     margin: 0;
+    animation: urgent-blink 2s ease-in-out infinite alternate;
+}
+
+@keyframes urgent-blink {
+    0% {
+        opacity: 0.8;
+        transform: scale(1);
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.03);
+        text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.5);
+    }
+    100% {
+        opacity: 0.8;
+        transform: scale(1);
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    }
 }
 
 .confirm-button {
@@ -266,6 +334,7 @@ html, body {
     position: relative;
     overflow: hidden;
     transform: translateY(0);
+    margin-top: 30px;
 }
 
 .confirm-button:before {
